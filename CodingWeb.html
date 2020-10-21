@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <title>WCE Coding</title>
+    </head>
+    <body>
+        <header>
+            <style>
+                header
+                {
+                    text-align: center;
+                    color: blue;
+                }
+            </style>
+            <h1><b><u>WCE Coding Club</u></b></h1>
+        </header>
+        
+        <hr>
+            <h1>
+                Problem Statement: Write a program in any language to find the maximum and minimum element in an array.
+            </h1>
+            <hr>
+        <section>
+            <h1>Divide and Conquer Method:</h1>
+            <article>
+                Given a function to compute on n inputs the divide-and-conquer strategy suggest splitting the inputs into k distinct subsets, 1 < <var> K </var>≤ n, yielding k sub problems. These Sub problems must be solved, and then a method must be found to combine sub solutions into a solution of the whole. 
+                If the Sub problems are still relatively large, then the divide-and-conquer strategy can possibly be reapplied. 
+                Often the sub problems resulting from a divide-and-conquer design are the same type as the original problem. 
+                For those cases the reapplication of the divide-and-conquer principle is naturally expressed by a recursive algorithm. Now smaller sub problems of the same kind are generated until eventually sub problems that are small enough to be solved without splitting are produced.
+                A divide-and-conquer algorithm for this problem would proceed as follows:  Let <var>P</var> = (n,a[i],….,a[j]) denote an arbitrary instance of the problem. Here n is the number of elements in the list a[i],….,a[j] and we are interested in finding the maximum and minimum of this list. Let small(P) be true when n ≤ 2. In this case, the maximum and minimum are a[i] if n = 1. If n = 2, the problem can be solved by making one comparison.
+                If the list has more than two elements, P has to be divided into smaller instances. For example, we might divide P into the two instances P1 = (n/2,a[1],….,a[n/2]) and P2 = (n - n/2,a[n/2 + 1],….,a[n]). After having divided P into two smaller sub problems, we can solve them by recursively invoking the same divide and conquer algorithm.
+                Now the question is How can we combine the Solutions for P1 and P2 to obtain the solution for P? If MAX(P) and MIN(P) are the maximum and minimum of the elements of P, then MAX(P) is the larger of MAX(P1) and MAX(P2) also MIN(P) is the smaller of MIN(P1) and MIN(P2).
+                MaxMin is a recursive algorithm that finds the maximum and minimum of the set of elements {a(i),a(i+1),…,a(j)}. The situation of set sizes one (i=j) and two (i=j-1) are handled separately. For sets containing more than two elements, the midpoint is determined and two new sub problems are generated. When the maxima and minima of this sub problems are determined, the two maxima are compared and the two minima are compared to achieve the solution for the entire set.
+                The procedure is initially invoked by the statement MaxMin(1,n,x,y). for this algorithm each node has four items of information: i, j, max, min. Suppose we simaulate MaxMin on the following nine elements:
+                <br>
+                <aside>
+                <var>a</var> : [1]  [2]  [3]  [4]  [5]  [6]  [7]  [8]  [9]
+                    22   13   -5   -8   15  60   17   31  47
+                A good way of keeping track of recursive calls is to build a tree by adding a node each time a new call is made. On the array a[ ] above, the following tree is produced
+                 <img src="DivAndCon.png" alt="ERROR"> 
+                We see that the root node contains 1 and 9 as the values of i and j corresponding to the initial call to MaxMin. This execution produces two new call to MaxMin, where i and j have the values 1, 5 and 6, 9, and thus split the set into two subsets of the same size. From the tree we can immediately see that the maximum depth of recursion is four (including the first call).
+            </aside>
+            </article>
+            
+        </section>
+        <hr>
+        <pre>
+            <h2>Code:</h2>
+            <code>
+                public class MaxMin {
+                    static MaxMin m=new MaxMin();
+                    static int max,min;
+                    
+                    public static void main(String ar[])
+                    {
+                        int a[]={10,12,9,7,15,11,1};
+                        MaxMin.max=MaxMin.min=a[0];
+                        int[] getMaxMin=m.MaxMin(a, 0, a.length-1, a[0], a[0]);
+                        System.out.println("Max : "+getMaxMin[0]+"\nMin : "+getMaxMin[1]);
+                    }
+                    
+                    public int[] MaxMin(int[] a,int i,int j,int max,int min)
+                    {
+                        int mid,max1,min1;
+                        int result[]=new int[2];
+                        //Small(P)
+                        if (i==j) { max = min = a[i]; } 
+                    else if (i==j-1) // Another case of Small(P)
+                        {
+                                if (a[i] < a[j]) { this.max = getMax(this.max,a[j]); this.min = getMin(this.min,a[i]); }
+                                else { this.max = getMax(this.max,a[i]); this.min = getMin(this.min,a[j]); }
+                        }
+                    else
+                    {
+                        // if P is not small, divide P into sub-problems.
+                        // Find where to split the set.
+                        mid = ( i + j )/2;
+                        // Solve the sub-problems.
+                        max1=min1=a[mid+1];
+                        MaxMin( a, i, mid, max, min );    
+                        MaxMin( a, mid+1, j, max1, min1 );
+                        // Combine the solutions.
+                        if (this.max < max1) this.max = max1;
+                        if (this.min > min1) this.min = min1;
+                    }
+                        result[0]=this.max;  result[1]=this.min;
+                        return result;
+                    }
+                    
+                    public static int getMax(int i,int j)
+                    {
+                        if(i>j) return i;
+                        else return j;
+                    }
+                    
+                    public static int getMin(int i,int j)
+                    {
+                        if(i>j) return j;
+                        else return i;
+                    }
+                }
+            </code>
+        </pre>
+        <hr>
+        
+        <section>
+            <h2>variables:</h2>
+            <samp>
+                 <var>mid</var>- stores midpoint        <br>
+                 <var>min</var>- stores minimum value    <br>
+                 <var>max</var>- stores maximum value     <br>
+                 <var>i</var>- iterator                 <br>
+                 <var>j</var>- iterator                 <br>
+                                  
+            </samp>
+        </section>
+        <hr>
+        <section>
+            <h2>Input:</h2>
+            <samp>
+                Size of an array : 10 <br>
+                Array elements : 4 23 456 123 3000 223 1 73 91 27 
+            </samp>
+        </section>
+        <hr>
+        <section>
+            <h2>Output:</h2>
+            <samp>
+                Minimum element is 1 <br>
+                Maximum element is 3000
+            </samp>
+            select and press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy the results.
+        </section>
+        <hr>
+        <pre>
+        <section>
+            <h2>Complexity:</h2>
+     Now what is the number of element comparisons needed for MaxMin? If T(n) represents this number, then the resulting recurrence relation is
+               
+      T(n) =  0                     ,        n=1
+      T(n) =  1                     ,        n=2
+      T(n) =  T(n/2) + T(n/2) + 2   ,        n>2
+
+     When n is a power of two, n = 2k
+     -for some positive integer k, then
+      T(n) = 2T(n/2) + 2
+           = 2(2T(n/4) + 2) + 2
+           = 4T(n/4) + 4 + 2
+           .
+           .
+           .
+           = 2k-1 T(2) + ∑(1≤i≤k-1) 2k
+           = 2k-1 + 2k – 2
+           = 3n/2 – 2 = O(n)
+      Note that 3n/2 – 2 is the best, average, worst case number of comparison when n is a power of two.
+      <s>Complexity is : O(nlog<sub>2</sub>n)</s>
+        </section>
+        </pre>
+        <hr>
+        <footer>
+            <h3>Reference for divide and conquer:
+            <a href="https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm#:~:text=In%20computer%20science%2C%20divide%20and,enough%20to%20be%20solved%20directly.">  Wikipedia</a>
+            </h3>  
+            
+            contact us:
+            <br>
+            <small> email : yashhoke0602@gmail.com</small>
+            <br>
+        </footer>
+    </body>
+</html>
